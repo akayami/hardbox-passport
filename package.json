@@ -1,0 +1,21 @@
+{
+  "name": "hardbox-passport",
+  "version": "0.0.1",
+  "description": "Hardbox Passport",
+  "main": "lib/main.js",
+  "license": "MIT",
+  "devDependencies": {
+    "async": "^3.1.0",
+    "body-parser": "^1.19.0",
+    "chai": "^4.2.0",
+    "express": "^4.17.1",
+    "hardbox-passport-local": "^1.0.4",
+    "hardbox-session": "^0.0.2",
+    "mocha": "^6.1.4",
+    "passport-mock-strategy": "^2.0.0",
+    "request": "^2.88.0"
+  },
+  "dependencies": {
+    "passport": "^0.4.0"
+  }
+}

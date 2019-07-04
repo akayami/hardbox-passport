@@ -1,0 +1,242 @@
+const request = require('request');
+const http = require('http');
+const async = require('async');
+const {expect} = require('chai');
+let ser1, handler, port = 18081;
+
+
+//const mock = require('./lib/hardbox-passport-mock');
+
+// ({
+// 	strategy: {
+// 		config: {
+// 			name: 'mock',
+// 			user: {
+// 				id: 10,
+// 				customer: 'Tomasz'
+// 			}
+// 		},
+// 	},
+// 	authenticate: (cred, cb) => {			// This is a plugable authentication function
+// 		if (cred.customer === 'fail') {
+// 			cb(null, false, {message: 'Incorrect Login'});
+// 		} else {
+// 			cb(null, {profile: 'Some User'});
+// 		}
+// 	},
+// });
+
+describe("BDD tests", () => {
+
+	let user = {
+		customer: 'ok'
+	};
+	const login_path = '/auth/login';
+	const failed_path = '/auth/failed';
+
+	beforeEach((done) => {
+		const h = require('../lib/main')({
+			serializer: (user, done) => {
+				console.debug('Serialize');
+				console.log(user);
+				done(null, user);
+			},
+			deserializer: (obj, done) => {
+				console.debug('Deserialize');
+				done(null, obj);
+			},
+			secureNamespace: '/secure',
+			passport: {
+				authenticate: {
+					failureRedirect: '/login'	// This is where user is redirected when login fails
+				}
+			},
+			logoutURL: '/logout',			// Triggers logout sequence
+			loginURL: '/loginURL',			// Provides Login interface
+			headerName: 'hdx-user',			// header name
+			strategies: [
+				{
+					object: require('./lib/hardbox-passport-mock'),
+					config: {
+						strategy: {
+							config: {
+								name: 'mock',
+								user: user
+								// user: {
+								// 	id: 10,
+								// 	customer: 'Tomasz'
+								// }
+							},
+						},
+						authenticate: (cred, cb) => {			// This is a plugable authentication function
+							//cb(null, false, {message: 'Incorrect Login'});
+							//console.log('Authenticate Engaged', cred);
+							if (cred.customer === 'fail') {
+								cb(null, false, {message: 'Incorrect Login'});
+							} else {
+								cb(null, cred);
+							}
+						},
+						handlerURL: login_path,
+						auth_options: {
+							failureRedirect: failed_path
+						}
+					}
+				},
+				// {
+				// 	name: 'hardbox-passport-local',
+				// 	config: {ai
+				// 		strategyConfig: {
+				// 			fields: ['customer', 'email', 'password']
+				// 		},
+				// 		authenticate: (credentials, cb) => {
+				// 			if (credentials.customer === 'fail') {
+				// 				cb(null, false, {message: 'Incorrect Login'});
+				// 			} else {
+				// 				cb(null, {profile: 'Some User'});
+				// 			}
+				// 		},
+				// 		local: {
+				// 			login: {
+				// 				loginURL: login_path
+				// 			}
+				// 		}
+				// 	},
+				// }
+			]
+		});
+
+		const handler = (req, res) => {
+			require('hardbox-session')({
+				secret: 'keyboard cat',
+				resave: false,
+				saveUninitialized: true
+			})(req, res, (err, req, res) => {
+				h(req, res, (err, req, res) => {
+					res.end();
+				});
+			});
+		};
+
+		ser1 = require('http').createServer(handler).listen(port, (err) => {
+			if (err) return done(err);
+			done();
+		});
+	});
+
+	afterEach(() => {
+		if (ser1) ser1.close();
+	});
+
+	it('Needs to initialize', (done) => {
+		done();
+	});
+
+	it('Login Success', (done) => {
+		user.customer = 'ok';
+		async.series([
+			(cb) => {
+				require('request')({
+					url: `http://localhost:${port}${login_path}`,
+					method: 'POST',
+					form: {
+						customer: 'user',
+						email: 'email',
+						password: 'password'
+					}
+				}, (err, res, body) => {
+					expect(res.statusCode).equal(200);
+					console.log(res.headers);
+					//expect(res.headers.location).equal(login_path);
+					return cb(err);
+				});
+			}
+		], (err, res) => {
+			if (err) return done(err);
+			done();
+		});
+	});
+
+
+	it('Login Failed', (done) => {
+		user.customer = 'fail';
+		async.series([
+			(cb) => {
+				require('request')({
+					url: `http://localhost:${port}${login_path}`,
+					method: 'POST',
+					form: {
+						customer: 'fail',
+						email: 'email',
+						password: 'password'
+					}
+				}, (err, res, body) => {
+					expect(res.statusCode).equal(302);
+					expect(res.headers.location).equal(failed_path);
+					return cb(err);
+				});
+			}
+		], (err, res) => {
+			if (err) return done(err);
+			done();
+		});
+	});
+
+	it('No Login', (done) => {
+		async.series([
+			(cb) => {
+				require('request')({
+					url: `http://localhost:${port}/secure`,
+					method: 'GET',
+					followRedirect: false
+				}, (err, res, body) => {
+					console.log(res.headers);
+					expect(res.statusCode).equal(302);
+					expect(res.headers.location).equal('/loginURL');
+					return cb(err);
+				});
+			}
+		], (err, res) => {
+			if (err) return done(err);
+			done();
+		});
+	});
+
+	it('Access Secure When Authorized', (done) => {
+		const j = require('request').jar();
+		const request = require('request').defaults({jar: j});
+		async.series([
+			(cb) => {
+				request({
+					url: `http://localhost:${port}${login_path}`,
+					method: 'POST',
+					form: {
+						customer: 'user',
+						email: 'email',
+						password: 'password'
+					}
+				}, (err, res, body) => {
+					expect(res.statusCode).equal(200);
+					//expect(res.headers.location).equal(login_path);
+					return cb(err);
+				});
+			},
+			(cb) => {
+				request({
+					url: `http://localhost:${port}/secure`,
+					method: 'GET',
+					followRedirect: false,
+					headers: {
+						Cookie: j.getCookieString(`http://localhost:${port}`)
+					}
+				}, (err, res, body) => {
+					expect(res.statusCode).equal(200);
+					return cb(err);
+				});
+			}
+		], (err, res) => {
+			if (err) return done(err);
+			done();
+		});
+	});
+});
