@@ -1,5 +1,6 @@
 const request = require('request');
 const http = require('http');
+const express = require('express');
 const async = require('async');
 const {expect} = require('chai');
 let ser1, handler, port = 18081;
@@ -33,19 +34,43 @@ describe("BDD tests", () => {
 	};
 	const login_path = '/auth/login';
 	const failed_path = '/auth/failed';
+	const secure_path = '/secure';
 
 	beforeEach((done) => {
-		const h = require('../lib/main')({
+		
+		const app = express();
+		// app.use((q, r, n) => {
+		// 	console.log('HJere')
+		// 	n();
+		// });
+		
+		// app.post(login_path, (req, res, next) => {
+		// 	console.log('POST');
+		// 	next();
+		// });
+		
+		app.get('/secure', (req, res, next) => {
+			console.log(req.headers);
+			next();
+		});
+		
+		require('hardbox-session')(app, {
+			secret: 'keyboard cat',
+			resave: false,
+			saveUninitialized: true
+		});
+		
+		
+		require('../lib/main')(app, {
 			serializer: (user, done) => {
-				console.debug('Serialize');
-				console.log(user);
+				console.debug('Serialize', user);
 				done(null, user);
 			},
 			deserializer: (obj, done) => {
-				console.debug('Deserialize');
+				console.debug('Deserialize', obj);
 				done(null, obj);
 			},
-			secureNamespace: '/secure',
+			secureNamespace: secure_path,
 			passport: {
 				authenticate: {
 					failureRedirect: '/login'	// This is where user is redirected when login fails
@@ -70,7 +95,6 @@ describe("BDD tests", () => {
 						},
 						authenticate: (cred, cb) => {			// This is a plugable authentication function
 							//cb(null, false, {message: 'Incorrect Login'});
-							//console.log('Authenticate Engaged', cred);
 							if (cred.customer === 'fail') {
 								cb(null, false, {message: 'Incorrect Login'});
 							} else {
@@ -84,11 +108,17 @@ describe("BDD tests", () => {
 					}
 				},
 				// {
-				// 	name: 'hardbox-passport-local',
-				// 	config: {ai
-				// 		strategyConfig: {
-				// 			fields: ['customer', 'email', 'password']
+				// 	object: require('../../hardbox-passport-local'),
+				// 	//name: 'hardbox-passport-local',
+				// 	config: {
+				// 		strategy: {
+				// 			config:	{
+				// 				fields: ['customer', 'email', 'password']
+				// 			}
 				// 		},
+				// 		// strategyConfig: {
+				// 		// 	fields: ['customer', 'email', 'password']
+				// 		// },
 				// 		authenticate: (credentials, cb) => {
 				// 			if (credentials.customer === 'fail') {
 				// 				cb(null, false, {message: 'Incorrect Login'});
@@ -100,22 +130,44 @@ describe("BDD tests", () => {
 				// 			login: {
 				// 				loginURL: login_path
 				// 			}
+				// 		},
+				// 		auth_options: {
+				// 			failureRedirect: failed_path
 				// 		}
 				// 	},
 				// }
 			]
 		});
+		
+		app.use((req, res, next) => {
+			console.debug(req.session);
+			res.status(200).end();
+			next();
+		});
+		
+		app.use((err, req, res, next) => {
+			if(err.code) res.status(err.code);
+			res.write(err.message);
+			res.end();
+			next();
+		});
 
 		const handler = (req, res) => {
-			require('hardbox-session')({
-				secret: 'keyboard cat',
-				resave: false,
-				saveUninitialized: true
-			})(req, res, (err, req, res) => {
-				h(req, res, (err, req, res) => {
-					res.end();
-				});
-			});
+			
+			app(req, res);
+			
+			// require('hardbox-session')({
+			// 	secret: 'keyboard cat',
+			// 	resave: false,
+			// 	saveUninitialized: true
+			// })(req, res, (err, req, res) => {
+			// 	console.log('here2');
+			// 	h(req, res, (err, req, res) => {
+			// 		console.log('here3');
+			// 		//console.debug('END');
+			// 		res.end();
+			// 	});
+			// });
 		};
 
 		ser1 = require('http').createServer(handler).listen(port, (err) => {
@@ -183,10 +235,11 @@ describe("BDD tests", () => {
 	});
 
 	it('No Login', (done) => {
+		user.customer = 'ok';
 		async.series([
 			(cb) => {
 				require('request')({
-					url: `http://localhost:${port}/secure`,
+					url: `http://localhost:${port}${secure_path}`,
 					method: 'GET',
 					followRedirect: false
 				}, (err, res, body) => {
@@ -203,6 +256,7 @@ describe("BDD tests", () => {
 	});
 
 	it('Access Secure When Authorized', (done) => {
+		user.customer = 'ok';
 		const j = require('request').jar();
 		const request = require('request').defaults({jar: j});
 		async.series([
@@ -217,13 +271,15 @@ describe("BDD tests", () => {
 					}
 				}, (err, res, body) => {
 					expect(res.statusCode).equal(200);
+					console.log(res.headers);
 					//expect(res.headers.location).equal(login_path);
 					return cb(err);
 				});
 			},
 			(cb) => {
+				console.log('cookies', j.getCookieString(`http://localhost:${port}`));
 				request({
-					url: `http://localhost:${port}/secure`,
+					url: `http://localhost:${port}${secure_path}`,
 					method: 'GET',
 					followRedirect: false,
 					headers: {
@@ -231,6 +287,7 @@ describe("BDD tests", () => {
 					}
 				}, (err, res, body) => {
 					expect(res.statusCode).equal(200);
+					console.log(res.headers);
 					return cb(err);
 				});
 			}

@@ -10,7 +10,7 @@
     "chai": "^4.2.0",
     "express": "^4.17.1",
     "hardbox-passport-local": "^1.0.4",
-    "hardbox-session": "^0.0.2",
+    "hardbox-session": "^0.0.3",
     "mocha": "^6.1.4",
     "passport-mock-strategy": "^2.0.0",
     "request": "^2.88.0"

@@ -2,8 +2,10 @@ const Strategy = require('passport-mock-strategy');
 const express = require('express');
 const bodyParser = require('body-parser');
 
-module.exports = (config, passport) => {
-	const app = express();
+module.exports = (app, passport, config) => {
+	//const app = express();
+	
+	app.use(require('body-parser').urlencoded({extended: true}));
 
 	passport.use(
 		new Strategy(
@@ -16,7 +18,7 @@ module.exports = (config, passport) => {
 					//console.log(cred);
 					if (err) {
 						return done(err);
-					} else if (result) {
+					} else if (result !== false) {
 						return done(null, result);
 					} else {
 						return done(null, false, {message: 'Incorrect Login'});
@@ -28,15 +30,11 @@ module.exports = (config, passport) => {
 
 	//passport.use(new Strategy(config.strategy.config, config.strategy.authenticate));
 
+	
 	app.use(config.handlerURL, bodyParser.urlencoded({extended: false}));
 	app.use(config.handlerURL, passport.initialize());
 	app.use(config.handlerURL, passport.session());
 
-
 	app.post(config.handlerURL, passport.authenticate('mock', config.auth_options));
-
-	return (req, res, cb) => {
-		app(req, res);
-		cb(null, req, res);
-	}
+	
 };
