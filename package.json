@@ -12,10 +12,19 @@
     "hardbox-passport-local": "^1.0.4",
     "hardbox-session": "^0.0.3",
     "mocha": "^6.1.4",
+    "nyc": "^14.1.1",
     "passport-mock-strategy": "^2.0.0",
-    "request": "^2.88.0"
+    "request": "^2.88.0",
+    "coveralls": "^3.0.4",
+    "eslint": "^6.0.1"
   },
   "dependencies": {
     "passport": "^0.4.0"
+  },
+  "scripts": {
+    "test": "mocha",
+    "lint": "node_modules/.bin/eslint --fix .",
+    "test-cov": "node_modules/.bin/nyc mocha ./test/*.test.js",
+    "coveralls": "nyc npm test && nyc report --reporter=text-lcov | node_modules/.bin/coveralls"
   }
 }

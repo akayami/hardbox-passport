@@ -79,7 +79,7 @@ describe("BDD tests", () => {
 			headerName: 'hdx-user',			// header name
 			strategies: [
 				{
-					object: require('./lib/hardbox-passport-mock'),
+					name: __dirname + '/lib/hardbox-passport-mock',
 					config: {
 						strategy: {
 							config: {
