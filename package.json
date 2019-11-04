@@ -12,7 +12,7 @@
     "eslint": "^6.0.1",
     "express": "^4.17.1",
     "hardbox-passport-local": "^1.0.4",
-    "hardbox-session": "^0.0.3",
+    "hardbox-session": "^0.0.4",
     "mocha": "^6.1.4",
     "nyc": "^14.1.1",
     "passport-mock-strategy": "^2.0.0",

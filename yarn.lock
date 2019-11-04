@@ -1143,10 +1143,10 @@ hardbox-passport-local@^1.0.4:
     passport-local-generic "^1.0.0"
     redis "^2.8.0"
 
-hardbox-session@^0.0.3:
-  version "0.0.3"
-  resolved "https://registry.yarnpkg.com/hardbox-session/-/hardbox-session-0.0.3.tgz#aff3b39732ba4278faaaaed26b2f6d138a5c0067"
-  integrity sha512-0X6ERWHoGaarl6onN6K1G9eD/rUwo4hXsOVlv91YJO+uAEGsw0P+bAHH9SVFiGKPqeEbJutS1KGdNkNzovFLUA==
+hardbox-session@^0.0.4:
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/hardbox-session/-/hardbox-session-0.0.4.tgz#89b21714e854350be03518a6de42f9a3d64d79b6"
+  integrity sha512-JEnu9CFWHmsviytacwE/hT3kqCFvrIRLeLw5m5ZSEQ0jAgghiX769z9W1FSUXpa978yVwxGkkV1tBFPpAmduDA==
   dependencies:
     express "^4.17.1"
     express-session "^1.16.2"
