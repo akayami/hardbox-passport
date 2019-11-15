@@ -9,10 +9,12 @@ describe('BDD tests - Same as base tests but using name instead of object', () =
 	
 	let testConfig = {
 		port: port,
+		login_ui_url: '/loginURL',
 		login_path: '/auth/login',
 		failed_path: '/auth/failed',
 		secure_path: '/secure',
 		logout_path: '/auth/logout',
+		secure_default_path: '/secure/default',
 		cred_valid: true,
 	};
 	
@@ -41,7 +43,7 @@ describe('BDD tests - Same as base tests but using name instead of object', () =
 				}
 			},
 			logoutURL: testConfig.logout_path,			// Triggers logout sequence
-			loginURL: '/loginURL',			// Provides Login interface
+			loginURL: testConfig.login_ui_url,			// Provides Login interface
 			headerName: 'hdx-user',			// header name
 			strategies: [
 				{

@@ -32,7 +32,6 @@ module.exports = function(testConfig) {
 		});
 	});
 	
-	
 	it('Login Failed', (done) => {
 		testConfig.cred_valid = false;
 		//user.customer = 'fail';
@@ -58,6 +57,29 @@ module.exports = function(testConfig) {
 		});
 	});
 	
+	it('Login Failed 2', (done) => {
+		testConfig.cred_valid = false;
+		//user.customer = 'fail';
+		async.series([
+			(cb) => {
+				require('request')({
+					url: `http://localhost:${testConfig.port}${testConfig.login_path}`,
+					method: 'POST',
+					form: {
+						customer: 'fail'
+					}
+				}, (err, res, body) => {
+					expect(res.statusCode).equal(302);
+					expect(res.headers.location).equal(testConfig.failed_path);
+					return cb(err);
+				});
+			}
+		], (err, res) => {
+			if (err) return done(err);
+			done();
+		});
+	});
+	
 	it('No Login', (done) => {
 		testConfig.cred_valid = true;
 		//user.customer = 'ok';
@@ -69,7 +91,7 @@ module.exports = function(testConfig) {
 					followRedirect: false
 				}, (err, res, body) => {
 					expect(res.statusCode).equal(302);
-					expect(res.headers.location).equal('/loginURL');
+					expect(res.headers.location).equal(testConfig.login_ui_url);
 					return cb(err);
 				});
 			}
@@ -176,7 +198,7 @@ module.exports = function(testConfig) {
 					}
 				}, (err, res, body) => {
 					expect(res.statusCode).equal(302);
-					expect(res.headers.location).equal('/loginURL');
+					expect(res.headers.location).equal(testConfig.login_ui_url);
 					return cb(err);
 				});
 			}
