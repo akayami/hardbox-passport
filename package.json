@@ -11,7 +11,6 @@
     "coveralls": "^3.0.4",
     "eslint": "^6.0.1",
     "express": "^4.17.1",
-    "hardbox-passport-local": "^1.2.0",
     "hardbox-session": "^0.0.5",
     "mocha": "^6.1.4",
     "nyc": "^14.1.1",
