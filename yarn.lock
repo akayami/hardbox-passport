@@ -439,13 +439,10 @@ concat-map@0.0.1:
   resolved "https://registry.yarnpkg.com/concat-map/-/concat-map-0.0.1.tgz#d8a96bd77fd68df7793a73036a3ba0d5405d477b"
   integrity sha1-2Klr13/Wjfd5OnMDajug1UBdR3s=
 
-connect-redis@^3.3.3:
-  version "3.4.1"
-  resolved "https://registry.yarnpkg.com/connect-redis/-/connect-redis-3.4.1.tgz#0623af46182232457fefbc7d4f552d87d35b3d20"
-  integrity sha512-oXNcpLg/PJ6G4gbhyGwrQK9mUQTKYa2aEnOH9kWIxbNUjIFPqUmzz75RdLp5JTPSjrBVcz+9ll4sSxfvlW0ZLA==
-  dependencies:
-    debug "^4.1.1"
-    redis "^2.8.0"
+connect-redis@^4.0.3:
+  version "4.0.3"
+  resolved "https://registry.yarnpkg.com/connect-redis/-/connect-redis-4.0.3.tgz#c7795cf09ed13dbcbfeb84ea8861069e8db85a46"
+  integrity sha512-Php0P0ShNfilW6f2d/2v7Q0VAiFeBYsg0bIgu8ST3x26CcQ1JtzV6vxPLUwK0uiq10hQSMR+HzSNhWbcvx6nLg==
 
 content-disposition@0.5.3:
   version "0.5.3"
@@ -637,10 +634,10 @@ ee-first@1.1.1:
   resolved "https://registry.yarnpkg.com/ee-first/-/ee-first-1.1.1.tgz#590c61156b0ae2f4f0255732a158b266bc56b21d"
   integrity sha1-WQxhFWsK4vTwJVcyoViyZrxWsh0=
 
-ejs@^2.5.7:
-  version "2.6.2"
-  resolved "https://registry.yarnpkg.com/ejs/-/ejs-2.6.2.tgz#3a32c63d1cd16d11266cd4703b14fec4e74ab4f6"
-  integrity sha512-PcW2a0tyTuPHz3tWyYqtK6r1fZ3gp+3Sop8Ph+ZYN81Ob5rwmbHEzaqs10N3BEsaGTkh/ooniXK+WwszGlc2+Q==
+ejs@^2.7.2:
+  version "2.7.2"
+  resolved "https://registry.yarnpkg.com/ejs/-/ejs-2.7.2.tgz#749037c4c09bd57626a6140afbe6b7e650661614"
+  integrity sha512-rHGwtpl67oih3xAHbZlpw5rQAt+YV1mSCu2fUZ9XNrfaGEhom7E+AUiMci+ByP4aSfuAWx7hE0BPuJLMrpXwOw==
 
 emoji-regex@^7.0.1:
   version "7.0.3"
@@ -835,7 +832,7 @@ execa@^1.0.0:
     signal-exit "^3.0.0"
     strip-eof "^1.0.0"
 
-express-session@^1.15.6, express-session@^1.16.2:
+express-session@^1.16.2:
   version "1.16.2"
   resolved "https://registry.yarnpkg.com/express-session/-/express-session-1.16.2.tgz#59f36d7770e94872d19b163b6708a2d16aa6848c"
   integrity sha512-oy0sRsdw6n93E9wpCNWKRnSsxYnSDX9Dnr9mhZgqUEEorzcq5nshGYSZ4ZReHFhKQ80WI5iVUUSPW7u3GaKauw==
@@ -849,7 +846,7 @@ express-session@^1.15.6, express-session@^1.16.2:
     safe-buffer "5.1.2"
     uid-safe "~2.1.5"
 
-express@^4.16.2, express@^4.17.1:
+express@^4.17.1:
   version "4.17.1"
   resolved "https://registry.yarnpkg.com/express/-/express-4.17.1.tgz#4491fc38605cf51f8629d39c2b5d026f98a4c134"
   integrity sha512-mHJ9O79RqluphRrcw2X/GTh3k9tVv8YcoyY4Kkh4WDMUYKRZUq0h1o0w2rrrxBqM7VoeUVqgb27xlEMXTnYt4g==
@@ -1129,24 +1126,24 @@ har-validator@~5.1.0:
     ajv "^6.5.5"
     har-schema "^2.0.0"
 
-hardbox-passport-local@^1.0.4:
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/hardbox-passport-local/-/hardbox-passport-local-1.0.4.tgz#8445aaaff92cf2ade65956cf8440d2e78fe37af3"
-  integrity sha1-hEWqr/ks8q3mWVbPhEDS54/jevM=
+hardbox-passport-local@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/hardbox-passport-local/-/hardbox-passport-local-1.2.0.tgz#a3872b3a74d2aebe57cfeabeeabd69258cc66ec4"
+  integrity sha512-GyeZcqvAhvS9TzaHxGPs8nb3BSQ3FE7/A5g6ZAx9PJt45Au0h/TMfz4Z6x0twH8DVBevYixFJlTxF35b82dVIg==
   dependencies:
-    connect-redis "^3.3.3"
-    ejs "^2.5.7"
-    express "^4.16.2"
-    express-session "^1.15.6"
-    morgan "^1.9.0"
+    connect-redis "^4.0.3"
+    ejs "^2.7.2"
+    express "^4.17.1"
+    express-session "^1.16.2"
+    morgan "^1.9.1"
     passport "^0.4.0"
     passport-local-generic "^1.0.0"
     redis "^2.8.0"
 
-hardbox-session@^0.0.4:
-  version "0.0.4"
-  resolved "https://registry.yarnpkg.com/hardbox-session/-/hardbox-session-0.0.4.tgz#89b21714e854350be03518a6de42f9a3d64d79b6"
-  integrity sha512-JEnu9CFWHmsviytacwE/hT3kqCFvrIRLeLw5m5ZSEQ0jAgghiX769z9W1FSUXpa978yVwxGkkV1tBFPpAmduDA==
+hardbox-session@^0.0.5:
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/hardbox-session/-/hardbox-session-0.0.5.tgz#106df042ded212399f479565ea15abd8cf8f16d7"
+  integrity sha512-UJ8G6XvOaY6w2yK6UzAeL4/8lp7oMzUekqU0diFhWPdY4gVYNxa6XLhnEneg7xWfs92AQVLhdwyWLKqEaEukWw==
   dependencies:
     express "^4.17.1"
     express-session "^1.16.2"
@@ -1673,7 +1670,7 @@ mocha@^6.1.4:
     yargs-parser "13.1.1"
     yargs-unparser "1.6.0"
 
-morgan@^1.9.0:
+morgan@^1.9.1:
   version "1.9.1"
   resolved "https://registry.yarnpkg.com/morgan/-/morgan-1.9.1.tgz#0a8d16734a1d9afbc824b99df87e738e58e2da59"
   integrity sha512-HQStPIV4y3afTiCYVxirakhlCfGkI161c76kKFca7Fk1JusM//Qeo1ej2XaMniiNeaZklMVrh3vTtIzpzwbpmA==

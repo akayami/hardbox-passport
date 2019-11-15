@@ -5,7 +5,7 @@ const {expect} = require('chai');
 let ser1, handler, port = 18081;
 
 
-describe("BDD tests - Same as base tests but using name instead of object", () => {
+describe('BDD tests - Same as base tests but using name instead of object', () => {
 	
 	let testConfig = {
 		port: port,

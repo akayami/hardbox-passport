@@ -9,7 +9,7 @@ let ser1, handler, port = 18081;
  * Executes a test with allowUnauthorized: true
  */
 
-describe("BDD tests - allowUnauthorized set to true", () => {
+describe('BDD tests - allowUnauthorized set to true', () => {
 	
 	let testConfig = {
 		port: port,
